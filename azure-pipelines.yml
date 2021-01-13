@@ -10,6 +10,19 @@ pool:
   vmImage: 'ubuntu-16.04'
 
 steps:
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarCloud Maven-Example'
+    organization: 'crquinta'
+    scannerMode: 'Other'
+    extraProperties: |
+      # Additional properties that will be passed to the scanner,
+      # Put one key=value per line, example:
+      # sonar.exclusions=**/*.bin
+      sonar.projectKey=crquinta_Java-Maven-Example
+      sonar.projectName=Java-Maven-Example
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
@@ -20,3 +33,9 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
